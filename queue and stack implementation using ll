@@ -1,0 +1,156 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Linked list structure
+struct LinkedList {
+    struct Node* head;
+};
+
+// Initialize an empty linked list
+void initLinkedList(struct LinkedList* list) {
+    list->head = NULL;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Check if the linked list is empty
+int isEmpty(struct LinkedList* list) {
+    return list->head == NULL;
+}
+
+// Display the linked list
+void display(struct LinkedList* list) {
+    struct Node* current = list->head;
+    while (current != NULL) {
+        printf("%d -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+// Stack operations
+
+// Push an element onto the stack
+void push(struct LinkedList* list, int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = list->head;
+    list->head = newNode;
+}
+
+// Pop an element from the stack
+int pop(struct LinkedList* list) {
+    if (isEmpty(list)) {
+        printf("Stack underflow\n");
+        return -1; // Assuming -1 as an error value
+    } else {
+        struct Node* poppedNode = list->head;
+        int poppedData = poppedNode->data;
+        list->head = poppedNode->next;
+        free(poppedNode);
+        return poppedData;
+    }
+}
+
+// Queue operations
+
+// Enqueue an element into the queue
+void enqueue(struct LinkedList* list, int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+
+    if (isEmpty(list)) {
+        list->head = newNode;
+    } else {
+        struct Node* current = list->head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+// Dequeue an element from the queue
+int dequeue(struct LinkedList* list) {
+    if (isEmpty(list)) {
+        printf("Queue underflow\n");
+        return -1; // Assuming -1 as an error value
+    } else {
+        struct Node* dequeuedNode = list->head;
+        int dequeuedData = dequeuedNode->data;
+        list->head = dequeuedNode->next;
+        free(dequeuedNode);
+        return dequeuedData;
+    }
+}
+
+// Main function for testing
+int main() {
+    // Create a stack
+    struct LinkedList stack;
+    initLinkedList(&stack);
+
+    push(&stack, 1);
+    push(&stack, 2);
+    push(&stack, 3);
+
+    printf("Stack: ");
+    display(&stack);
+
+    printf("Popped item: %d\n", pop(&stack));
+    printf("Popped item: %d\n", pop(&stack));
+
+    // Create a queue
+    struct LinkedList queue;
+    initLinkedList(&queue);
+
+    enqueue(&queue, 1);
+    enqueue(&queue, 2);
+    enqueue(&queue, 3);
+
+    printf("Queue: ");
+    display(&queue);
+
+    printf("Dequeued item: %d\n", dequeue(&queue));
+    printf("Dequeued item: %d\n", dequeue(&queue));
+
+    return 0;
+}
