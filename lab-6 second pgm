@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+};
+
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    return newNode;
+}
+
+
+void insertToLeft(struct Node** head, int newData, int existingData) {
+    struct Node* newNode = createNode(newData);
+    struct Node* current = *head;
+
+    while (current != NULL && current->data != existingData) {
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Node with value %d not found in the list.\n", existingData);
+        free(newNode);
+        return;
+    }
+
+    if (current->prev != NULL) {
+        current->prev->next = newNode;
+        newNode->prev = current->prev;
+    } else {
+        *head = newNode;
+    }
+
+    newNode->next = current;
+    current->prev = newNode;
+}
+
+
+void deleteNode(struct Node** head, int dataToDelete) {
+    struct Node* current = *head;
+
+    while (current != NULL && current->data != dataToDelete) {
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Node with value %d not found in the list.\n", dataToDelete);
+        return;
+    }
+
+    if (current->prev != NULL) {
+        current->prev->next = current->next;
+    } else {
+        *head = current->next;
+    }
+
+    if (current->next != NULL) {
+        current->next->prev = current->prev;
+    }
+
+    free(current);
+}
+
+
+void displayList(struct Node* head) {
+    struct Node* current = head;
+    printf("Doubly Linked List: ");
+    while (current != NULL) {
+        printf("%d <-> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+
+int main() {
+    struct Node* head = NULL;
+
+    printf("The list is --\n");
+    head = createNode(1);
+    head->next = createNode(2);
+    head->next->prev = head;
+    head->next->next = createNode(3);
+    head->next->next->prev = head->next;
+
+
+    displayList(head);
+    printf("The list after inserting to left of a node is --\n");
+
+    insertToLeft(&head, 4, 2);
+    displayList(head);
+
+    printf("The list after deleting the node based on a specific value is-- \n");
+    deleteNode(&head, 2);
+    displayList(head);
+
+    return 0;
+}
+
+output
+The list is --
+Doubly Linked List: 1 <-> 2 <-> 3 <-> NULL
+The list after inserting to left of a node is --
+Doubly Linked List: 1 <-> 4 <-> 2 <-> 3 <-> NULL
+The list after deleting the node based on a specific value is-- 
+Doubly Linked List: 1 <-> 4 <-> 3 <-> NULL
